@@ -19,6 +19,23 @@ namespace StringCompactor
         }
 
         [Fact]
+        public void DoubleDifferentCase()
+        {
+            const string String1 = "hello";
+            const string String2 = "Hello";
+
+            var compacted = Compactor.Compact(new[] { String1, String2 }, StringComparison.OrdinalIgnoreCase);
+
+            Assert.Equal(2, compacted.Count);
+
+            Assert.Same(String1, compacted[0].Original);
+            Assert.Equal(new StringSpan(String1), compacted[0]);
+
+            Assert.Same(String1, compacted[1].Original);
+            Assert.Equal(new StringSpan(String1), compacted[1]);
+        }
+
+        [Fact]
         public void SingleItem()
         {
             const string Str = "hello";

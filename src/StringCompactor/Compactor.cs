@@ -6,7 +6,7 @@ namespace StringCompactor
 {
     public static class Compactor
     {
-        public static IReadOnlyList<StringSpan> Compact(IReadOnlyList<string> input)
+        public static IReadOnlyList<StringSpan> Compact(IReadOnlyList<string> input, StringComparison comparison = StringComparison.Ordinal)
         {
             if (input == null)
             {
@@ -18,7 +18,7 @@ namespace StringCompactor
                 return Array.Empty<StringSpan>();
             }
 
-            var sorted = new SortedSet<string>(input, LengthComparer.Instance);
+            var sorted = new SortedSet<string>(input, new LengthComparer(comparison));
 
             StringSpan GetStringSpan(string s)
             {
@@ -29,7 +29,7 @@ namespace StringCompactor
 
                 foreach (var str in sorted)
                 {
-                    var index = str.IndexOf(s, StringComparison.Ordinal);
+                    var index = str.IndexOf(s, comparison);
 
                     if (index > -1)
                     {
@@ -45,10 +45,11 @@ namespace StringCompactor
 
         private class LengthComparer : IComparer<string>
         {
-            public static LengthComparer Instance { get; } = new LengthComparer();
+            private readonly StringComparer _comparer;
 
-            private LengthComparer()
+            public LengthComparer(StringComparison comparison)
             {
+                _comparer = StringComparer.FromComparison(comparison);
             }
 
             public int Compare(string x, string y)
@@ -63,7 +64,7 @@ namespace StringCompactor
                     return y.Length.CompareTo(x.Length);
                 }
 
-                return StringComparer.Ordinal.Compare(x, y);
+                return _comparer.Compare(x, y);
             }
         }
     }
