@@ -63,5 +63,25 @@ namespace StringCompactor
             Assert.Same(String1, compacted[1].Original);
             Assert.Equal(new StringSpan(String1, 0, String2.Length), compacted[1]);
         }
+
+        [Fact]
+        public void TripleSubstringWithNull()
+        {
+            const string String1 = "hello1";
+            const string String2 = "hello";
+
+            var compacted = Compactor.Compact(new[] { String1, String2, null });
+
+            Assert.Equal(3, compacted.Count);
+
+            Assert.Same(String1, compacted[0].Original);
+            Assert.Equal(new StringSpan(String1), compacted[0]);
+
+            Assert.Same(String1, compacted[1].Original);
+            Assert.Equal(new StringSpan(String1, 0, String2.Length), compacted[1]);
+
+            Assert.Null(compacted[2].Original);
+            Assert.Equal(StringSpan.Empty, compacted[2]);
+        }
     }
 }

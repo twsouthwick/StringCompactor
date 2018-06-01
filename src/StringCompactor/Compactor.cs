@@ -22,6 +22,11 @@ namespace StringCompactor
 
             StringSpan GetStringSpan(string s)
             {
+                if (s == null)
+                {
+                    return default;
+                }
+
                 foreach (var str in sorted)
                 {
                     var index = str.IndexOf(s, StringComparison.Ordinal);

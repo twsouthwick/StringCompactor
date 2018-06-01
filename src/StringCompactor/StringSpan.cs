@@ -24,6 +24,8 @@ namespace StringCompactor
 
         public ReadOnlySpan<char> Span => Original.AsSpan(Start, Length);
 
+        public static StringSpan Empty { get; }
+
         public static implicit operator StringSpan(string str) => ToStringSpan(str);
 
         public override string ToString() => Original.Substring(Start, Length);
