@@ -28,7 +28,7 @@ namespace StringCompactor
 
         public static implicit operator StringSpan(string str) => ToStringSpan(str);
 
-        public override string ToString() => Original.Substring(Start, Length);
+        public override string ToString() => Original?.Substring(Start, Length);
 
         public static StringSpan ToStringSpan(string str) => new StringSpan(str);
     }

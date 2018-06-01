@@ -98,6 +98,7 @@ namespace StringCompactor
             Assert.Equal(new StringSpan(String1, 0, String2.Length), compacted[1]);
 
             Assert.Null(compacted[2].Original);
+            Assert.Null(compacted[2].ToString());
             Assert.Equal(StringSpan.Empty, compacted[2]);
         }
     }
