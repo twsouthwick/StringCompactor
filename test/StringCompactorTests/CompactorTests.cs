@@ -15,7 +15,6 @@ namespace StringCompactor
         [Fact]
         public void ReturnsEmpty()
         {
-            Assert.Same(Array.Empty<StringSpan>(), Compactor.Compact(Enumerable.Empty<string>()));
             Assert.Same(Array.Empty<StringSpan>(), Compactor.Compact(Array.Empty<string>()));
         }
 
@@ -28,8 +27,41 @@ namespace StringCompactor
             var single = Assert.Single(compacted);
 
             Assert.Same(Str, single.Original);
-            Assert.Equal(0, single.Start);
-            Assert.Equal(Str.Length, single.Length);
+            Assert.Equal(new StringSpan(Str), single);
+        }
+
+        [Fact]
+        public void DoubleUnique()
+        {
+            const string String1 = "hello";
+            const string String2 = "world";
+
+            var compacted = Compactor.Compact(new[] { String1, String2 });
+
+            Assert.Equal(2, compacted.Count);
+
+            Assert.Same(String1, compacted[0].Original);
+            Assert.Equal(new StringSpan(String1), compacted[0]);
+
+            Assert.Same(String2, compacted[1].Original);
+            Assert.Equal(new StringSpan(String2), compacted[1]);
+        }
+
+        [Fact]
+        public void DoubleSubstring()
+        {
+            const string String1 = "hello1";
+            const string String2 = "hello";
+
+            var compacted = Compactor.Compact(new[] { String1, String2 });
+
+            Assert.Equal(2, compacted.Count);
+
+            Assert.Same(String1, compacted[0].Original);
+            Assert.Equal(new StringSpan(String1), compacted[0]);
+
+            Assert.Same(String1, compacted[1].Original);
+            Assert.Equal(new StringSpan(String1, 0, String2.Length), compacted[1]);
         }
     }
 }
