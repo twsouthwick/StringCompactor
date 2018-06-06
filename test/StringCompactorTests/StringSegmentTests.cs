@@ -3,12 +3,12 @@ using Xunit;
 
 namespace StringCompactor
 {
-    public class StringSpanTests
+    public class StringSegmentTests
     {
         [Fact]
-        public void DefaultStringSpan()
+        public void DefaultStringSegment()
         {
-            var span = default(StringSpan);
+            var span = default(StringSegment);
 
             Assert.Null(span.ToString());
             Assert.Null(span.Original);
@@ -17,23 +17,23 @@ namespace StringCompactor
         }
 
         [Fact]
-        public void EmptySpan()
+        public void EmptySegment()
         {
-            Assert.Equal(default, StringSpan.Empty);
+            Assert.Equal(default, StringSegment.Empty);
         }
 
         [Fact]
-        public void ToStringSpan()
+        public void ToString()
         {
             const string Str = "hello world";
-            Assert.Equal(new StringSpan(Str), StringSpan.ToStringSpan(Str));
+            Assert.Equal(new StringSegment(Str), StringSegment.ToStringSpan(Str));
         }
 
         [Fact]
         public void ImplicitConverter()
         {
             const string Str = "hello world";
-            Assert.Equal(new StringSpan(Str), Str);
+            Assert.Equal(new StringSegment(Str), Str);
         }
 
         [InlineData("hello2", 0, 2, "he")]
@@ -41,8 +41,8 @@ namespace StringCompactor
         [Theory]
         public void Substring(string original, int start, int length, string expected)
         {
-            Assert.Equal(expected, new StringSpan(original, start, length).ToString());
-            Assert.Equal(expected.AsSpan().ToArray(), new StringSpan(original, start, length).Span.ToArray());
+            Assert.Equal(expected, new StringSegment(original, start, length).ToString());
+            Assert.Equal(expected.AsSpan().ToArray(), new StringSegment(original, start, length).Span.ToArray());
         }
     }
 }

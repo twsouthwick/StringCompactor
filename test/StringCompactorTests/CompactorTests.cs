@@ -15,7 +15,7 @@ namespace StringCompactor
         [Fact]
         public void ReturnsEmpty()
         {
-            Assert.Same(Array.Empty<StringSpan>(), Compactor.Compact(Array.Empty<string>()));
+            Assert.Same(Array.Empty<StringSegment>(), Compactor.Compact(Array.Empty<string>()));
         }
 
         [Fact]
@@ -29,10 +29,10 @@ namespace StringCompactor
             Assert.Equal(2, compacted.Count);
 
             Assert.Same(String1, compacted[0].Original);
-            Assert.Equal(new StringSpan(String1), compacted[0]);
+            Assert.Equal(new StringSegment(String1), compacted[0]);
 
             Assert.Same(String1, compacted[1].Original);
-            Assert.Equal(new StringSpan(String1), compacted[1]);
+            Assert.Equal(new StringSegment(String1), compacted[1]);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace StringCompactor
             var single = Assert.Single(compacted);
 
             Assert.Same(Str, single.Original);
-            Assert.Equal(new StringSpan(Str), single);
+            Assert.Equal(new StringSegment(Str), single);
         }
 
         [Fact]
@@ -58,10 +58,10 @@ namespace StringCompactor
             Assert.Equal(2, compacted.Count);
 
             Assert.Same(String1, compacted[0].Original);
-            Assert.Equal(new StringSpan(String1), compacted[0]);
+            Assert.Equal(new StringSegment(String1), compacted[0]);
 
             Assert.Same(String2, compacted[1].Original);
-            Assert.Equal(new StringSpan(String2), compacted[1]);
+            Assert.Equal(new StringSegment(String2), compacted[1]);
         }
 
         [Fact]
@@ -75,10 +75,10 @@ namespace StringCompactor
             Assert.Equal(2, compacted.Count);
 
             Assert.Same(String1, compacted[0].Original);
-            Assert.Equal(new StringSpan(String1), compacted[0]);
+            Assert.Equal(new StringSegment(String1), compacted[0]);
 
             Assert.Same(String1, compacted[1].Original);
-            Assert.Equal(new StringSpan(String1, 0, String2.Length), compacted[1]);
+            Assert.Equal(new StringSegment(String1, 0, String2.Length), compacted[1]);
         }
 
         [Fact]
@@ -92,14 +92,14 @@ namespace StringCompactor
             Assert.Equal(3, compacted.Count);
 
             Assert.Same(String1, compacted[0].Original);
-            Assert.Equal(new StringSpan(String1), compacted[0]);
+            Assert.Equal(new StringSegment(String1), compacted[0]);
 
             Assert.Same(String1, compacted[1].Original);
-            Assert.Equal(new StringSpan(String1, 0, String2.Length), compacted[1]);
+            Assert.Equal(new StringSegment(String1, 0, String2.Length), compacted[1]);
 
             Assert.Null(compacted[2].Original);
             Assert.Null(compacted[2].ToString());
-            Assert.Equal(StringSpan.Empty, compacted[2]);
+            Assert.Equal(StringSegment.Empty, compacted[2]);
         }
     }
 }

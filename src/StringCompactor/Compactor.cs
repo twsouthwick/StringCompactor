@@ -6,7 +6,7 @@ namespace StringCompactor
 {
     public static class Compactor
     {
-        public static IReadOnlyList<StringSpan> Compact(IEnumerable<string> input, StringComparison comparison = StringComparison.Ordinal)
+        public static IReadOnlyList<StringSegment> Compact(IEnumerable<string> input, StringComparison comparison = StringComparison.Ordinal)
         {
             if (input == null)
             {
@@ -15,13 +15,13 @@ namespace StringCompactor
 
             if (!input.Any())
             {
-                return Array.Empty<StringSpan>();
+                return Array.Empty<StringSegment>();
             }
 
             var collection = (input as ICollection<string>) ?? input.ToList();
             var sorted = new SortedSet<string>(collection, new LengthComparer(comparison));
 
-            StringSpan GetStringSpan(string s)
+            StringSegment GetStringSpan(string s)
             {
                 if (s == null)
                 {
@@ -34,7 +34,7 @@ namespace StringCompactor
 
                     if (index > -1)
                     {
-                        return new StringSpan(str, index, s.Length);
+                        return new StringSegment(str, index, s.Length);
                     }
                 }
 
