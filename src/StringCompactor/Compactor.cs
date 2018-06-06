@@ -18,7 +18,7 @@ namespace StringCompactor
                 return Array.Empty<StringSegment>();
             }
 
-            var collection = (input as ICollection<string>) ?? input.ToList();
+            var collection = Cache(input);
             var sorted = new SortedSet<string>(collection, new LengthComparer(comparison));
 
             StringSegment GetStringSpan(string s)
@@ -42,6 +42,18 @@ namespace StringCompactor
             }
 
             return collection.Select(GetStringSpan).ToList();
+        }
+
+        private static IEnumerable<T> Cache<T>(IEnumerable<T> enumerable)
+        {
+            if (enumerable is IReadOnlyCollection<T> || enumerable is ICollection<T>)
+            {
+                return enumerable;
+            }
+            else
+            {
+                return enumerable.ToList();
+            }
         }
 
         private class LengthComparer : IComparer<string>

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using NSubstitute;
 using Xunit;
 
 namespace StringCompactor
@@ -71,6 +73,51 @@ namespace StringCompactor
             const string String2 = "hello";
 
             var compacted = Compactor.Compact(new[] { String1, String2 });
+
+            Assert.Equal(2, compacted.Count);
+
+            Assert.Same(String1, compacted[0].Buffer);
+            Assert.Equal(new StringSegment(String1), compacted[0]);
+
+            Assert.Same(String1, compacted[1].Buffer);
+            Assert.Equal(new StringSegment(String1, 0, String2.Length), compacted[1]);
+        }
+
+        [Fact]
+        public void DoubleSubstringWithCustomCollection()
+        {
+            const string String1 = "hello1";
+            const string String2 = "hello";
+
+            var compacted = Compactor.Compact(new OnlyCollection<string>(new[] { String1, String2 }));
+
+            Assert.Equal(2, compacted.Count);
+
+            Assert.Same(String1, compacted[0].Buffer);
+            Assert.Equal(new StringSegment(String1), compacted[0]);
+
+            Assert.Same(String1, compacted[1].Buffer);
+            Assert.Equal(new StringSegment(String1, 0, String2.Length), compacted[1]);
+        }
+
+        [Fact]
+        public void DoubleSubstringWithEnumerable()
+        {
+            const string String1 = "hello1";
+            const string String2 = "hello";
+
+            int count = 0;
+
+            IEnumerable<string> GetList()
+            {
+                yield return String1;
+                yield return String2;
+                count++;
+            }
+
+            var compacted = Compactor.Compact(GetList());
+
+            Assert.Equal(1, count);
 
             Assert.Equal(2, compacted.Count);
 
