@@ -36,7 +36,13 @@ namespace StringCompactor
 
         public int GetHashCode(StringSegment obj)
         {
-            return _comparer.GetHashCode(obj.Value);
+            var hashCode = new HashCode();
+
+            hashCode.Add(obj.Value, _comparer);
+            hashCode.Add(obj.Start);
+            hashCode.Add(obj.Length);
+
+            return hashCode.ToHashCode();
         }
     }
 }
