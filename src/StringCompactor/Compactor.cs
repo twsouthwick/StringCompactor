@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace StringCompactor
 {
     public static class Compactor
     {
-        public static IReadOnlyList<StringSegment> Compact(IEnumerable<string> input, StringComparison comparison = StringComparison.Ordinal)
+        public static IReadOnlyList<StringSegment> Compact(IEnumerable<string> input, StringComparison comparison = StringComparison.Ordinal, IProgress progress = null)
         {
             if (input == null)
             {
@@ -21,8 +22,10 @@ namespace StringCompactor
             var collection = Cache(input);
             var sorted = new SortedSet<string>(collection, new LengthComparer(comparison));
 
-            StringSegment GetStringSpan(string s)
+            StringSegment GetStringSpan(string s, int i)
             {
+                progress?.ProgressChanged(i, collection.Length);
+
                 if (s == null)
                 {
                     return default;
@@ -41,20 +44,48 @@ namespace StringCompactor
                 throw new InvalidOperationException();
             }
 
-            return collection.Select(GetStringSpan).ToList();
+            return collection.AsParallel().Select(GetStringSpan).ToList();
         }
 
-        private static IEnumerable<T> Cache<T>(IEnumerable<T> enumerable)
+        private static EnumerableWithLength<T> Cache<T>(IEnumerable<T> enumerable)
         {
-            if (enumerable is IReadOnlyCollection<T> || enumerable is ICollection<T>)
+            if (enumerable is IReadOnlyCollection<T> readOnly)
             {
-                return enumerable;
+                return new EnumerableWithLength<T>(readOnly);
+            }
+            else if (enumerable is ICollection<T> collection)
+            {
+                return new EnumerableWithLength<T>(collection);
             }
             else
             {
-                return enumerable.ToList();
+                return new EnumerableWithLength<T>((ICollection<T>)enumerable.ToList());
             }
         }
+
+        private class EnumerableWithLength<T> : IEnumerable<T>
+        {
+            private readonly IEnumerable<T> _items;
+
+            public EnumerableWithLength(IReadOnlyCollection<T> items)
+            {
+                _items = items;
+                Length = items.Count;
+            }
+
+            public EnumerableWithLength(ICollection<T> items)
+            {
+                _items = items;
+                Length = items.Count;
+            }
+
+            public int Length { get; }
+
+            public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
+        }
+
 
         private class LengthComparer : IComparer<string>
         {
