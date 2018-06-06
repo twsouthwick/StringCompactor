@@ -11,7 +11,7 @@ namespace StringCompactor
             var span = default(StringSegment);
 
             Assert.Null(span.ToString());
-            Assert.Null(span.Original);
+            Assert.Null(span.Buffer);
             Assert.Equal(0, span.Start);
             Assert.Equal(0, span.Length);
         }
@@ -23,7 +23,7 @@ namespace StringCompactor
         }
 
         [Fact]
-        public void ToString()
+        public void ToStringTest()
         {
             const string Str = "hello world";
             Assert.Equal(new StringSegment(Str), StringSegment.ToStringSpan(Str));
@@ -42,7 +42,7 @@ namespace StringCompactor
         public void Substring(string original, int start, int length, string expected)
         {
             Assert.Equal(expected, new StringSegment(original, start, length).ToString());
-            Assert.Equal(expected.AsSpan().ToArray(), new StringSegment(original, start, length).Span.ToArray());
+            Assert.Equal(expected.ToCharArray(), new StringSegment(original, start, length).Span.ToArray());
         }
     }
 }
